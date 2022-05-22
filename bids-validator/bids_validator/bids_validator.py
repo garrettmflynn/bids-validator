@@ -24,7 +24,7 @@ class BIDSValidator():
             won't. Defaults to True.
 
         """
-        self.dir_rules = os.path.join(os.path.dirname(__file__)) + "/rules/"
+        self.dir_rules = f"{os.path.join(os.path.dirname(__file__))}/rules/"
         self.index_associated = index_associated
 
     def is_bids(self, path):
@@ -63,9 +63,8 @@ class BIDSValidator():
         True
 
         """
-        conditions = []
+        conditions = [self.is_top_level(path)]
 
-        conditions.append(self.is_top_level(path))
         conditions.append(self.is_associated_data(path))
         conditions.append(self.is_session_level(path))
         conditions.append(self.is_subject_level(path))
@@ -163,10 +162,4 @@ class BIDSValidator():
         match = re.compile(expression).findall(path)
         match = match[0] if len(match) >= 1 else False
         # adapted from JS code and JS does not support conditional groups
-        if (match):
-            if ((match[1] == match[2][1:]) | (not match[1])):
-                return True
-            else:
-                return False
-        else:
-            return False
+        return bool(((match[1] == match[2][1:]) | (not match[1]))) if match else False

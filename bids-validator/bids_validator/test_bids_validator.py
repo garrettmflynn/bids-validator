@@ -37,7 +37,7 @@ def _gather_test_files(dspath, exclude_keywords):
         for file in f:
             fname = os.path.join(r, file)
             fname = fname.replace(dspath, '')
-            if not any(keyword in fname for keyword in exclude_keywords):
+            if all(keyword not in fname for keyword in exclude_keywords):
                 files.append(fname)
 
     return files
